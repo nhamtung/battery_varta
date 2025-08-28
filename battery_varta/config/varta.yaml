@@ -1,0 +1,20 @@
+bus:
+  device: can_peak
+  driver_plugin: can::PeakCANInterface   # dùng plugin Peak CAN
+  master_allocator: canopen::SimpleMaster::Allocator
+sync:
+  interval_ms: 10
+
+nodes:
+  varta_battery:
+    id: 0x01
+    eds_pkg: battery_varta
+    eds_file: config/V02.06.02.00.eds
+    device_family: "Varta"
+    topic: "varta"
+    frame_id: "battery_varta"
+    publish:
+      - "0x1a08,2!"   # SOC
+      - "0x1a00,1!"   # Voltage
+      - "0x1a00,2!"   # Current
+    subscribe: []

@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="ros_canopen" type="ros_canopen_node" name="can_varta_node" output="screen">
+    <param name="config_file" value="$(find battery_varta)/config/varta.yaml"/>
+  </node>
+</launch>

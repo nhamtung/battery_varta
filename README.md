@@ -12,6 +12,38 @@
 # Dependency
 - ros_canopen package: https://github.com/nhamtung/ros_canopen.git
 
+# Rename CAN device
+- Check CAN_PEAK: $lsusb | grep -i peak
+- Open config file: $sudo nano /etc/udev/rules.d/80-can.rules
+- Add to file:
+```
+# Gán tên cố định cho USB-CAN PEAK
+SUBSYSTEM=="net", ACTION=="add", ATTRS{idVendor}=="0c72", ATTRS{idProduct}=="000c", NAME:="can_peak"
+```
+- Restart: 
+    + $sudo udevadm control --reload-rules
+    + $sudo udevadm trigger
+    + Reboot IPC
+- Check result: $ip link show
+
+# Config CAN for Battery
+- Open config file: $sudo nano /etc/systemd/network/81-can.network
+- Add to file:
+```
+[Match]
+Name=can_peak
+[CAN]
+BitRate=500K
+```
+- Enable: $sudo systemctl enable systemd-networkd
+- Start: $sudo systemctl start systemd-networkd
+- Restart: $sudo systemctl restart systemd-networkd
+- Command with CAN:
+    + Disable CanOpen: $sudo ip link set can_peak down
+    + Enable CanOpen: $sudo ip link set can_peak up type can bitrate 250000
+    + Listen CanOpen: $candump can_peak
+    + Send: $cansend can_peak 123#deadbeef
+
 # Publisher
 - /battery (sensor_msgs::BatteryState)
 - /diagnostic_battery (diagnostic_msgs::DiagnosticArray)
