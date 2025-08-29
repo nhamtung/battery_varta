@@ -1,17 +1,5 @@
 <launch>
-
-  <group ns="varta">
-    <arg name="can_chain_yaml" default="$(find battery_varta)/config/varta.yaml"/>
-    <!-- <node pkg="ros_canopen" type="ros_canopen_node" name="can_varta_node" output="screen">
-      <param name="config_file" value="$(find battery_varta)/config/varta.yaml"/>
-    </node> -->
-
-    <node name="varta_can_chain_node" pkg="motor_canopen" type="motor_can_chain_node" output="screen">
-      <rosparam file="$(arg can_chain_yaml)" command="load"/>                               
-    </node>
-    <node name="varta_canopen_node" pkg="motor_canopen" type="motor_canopen_node" output="screen"> 
-      <rosparam file="$(arg can_chain_yaml)" command="load"/>                       
-    </node>
-  </group>
-
+  <rosparam file="/home/robotics/TungNV/dev_ws/src/battery_varta/battery_varta/config/varta.yaml" command="load"/>
+  <node pkg="canopen_chain_node" type="canopen_chain_node" name="varta_can_chain_node" output="screen">
+  </node>
 </launch>

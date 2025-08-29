@@ -33,7 +33,7 @@ SUBSYSTEM=="net", ACTION=="add", ATTRS{idVendor}=="0c72", ATTRS{idProduct}=="000
 [Match]
 Name=can_peak
 [CAN]
-BitRate=500K
+BitRate=250K
 ```
 - Enable: $sudo systemctl enable systemd-networkd
 - Start: $sudo systemctl start systemd-networkd
