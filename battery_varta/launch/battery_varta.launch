@@ -1,5 +1,12 @@
 <launch>
-  <rosparam file="/home/robotics/TungNV/dev_ws/src/battery_varta/battery_varta/config/varta.yaml" command="load"/>
+  <rosparam file="$(find battery_varta)/config/varta.yaml" command="load" ns="/battery"/>
+
   <node pkg="canopen_chain_node" type="canopen_chain_node" name="varta_can_chain_node" output="screen">
+    <param name="bus/device" value="can_peak"/>
+    <param name="bus/driver_plugin" value="can::SocketCANInterface"/>
+    <param name="bus/master_allocator" value="canopen::SimpleMaster::Allocator"/>
+    <param name="sync/interval_ms" value="100"/>
+    <param name="sync/overflow" value="2"/>
+    <param name="nodes" value="/battery/nodes"/>
   </node>
 </launch>

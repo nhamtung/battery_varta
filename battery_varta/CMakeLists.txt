@@ -4,7 +4,6 @@ project(battery_varta)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
-  #ros_canopen
 )
 
 catkin_package(

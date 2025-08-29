@@ -1,19 +1,11 @@
-bus:
-  device: can_peak
-  driver_plugin: can::SocketCANInterface
-  master_allocator: canopen::SimpleMaster::Allocator
-
-sync:
-  interval_ms: 100  # TPDO9 100ms
-
 nodes:
-  varta_battery:
-    id: 1
-    eds_file: /home/robotics/TungNV/dev_ws/src/battery_varta/battery_varta/config/V02.06.02.00.eds
+  - id: 1
+    eds_file: config/V02.06.02.00.eds
     device_family: "Varta"
-    topic: "varta"
+    topic: "battery_varta"
     frame_id: "battery_varta"
     publish:
-      # TPDO9: Charge Control, SoC, Charge Voltage, Charge Current, Battery Status
-      - "0x264,1!"
+      - '26752:0'
+      - '6656:1'
+      - '6664:2'
     subscribe: []
