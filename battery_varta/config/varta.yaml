@@ -1,6 +1,6 @@
 bus:
   device: can_peak
-  driver_plugin: can::SocketCANInterface   # dùng plugin Peak CAN
+  driver_plugin: can::SocketCANInterface   # 
   # driver_plugin: can::PeakCANInterface   # dùng plugin Peak CAN
   master_allocator: canopen::SimpleMaster::Allocator
 sync:
