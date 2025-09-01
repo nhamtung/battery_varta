@@ -42,7 +42,8 @@ PowerSupplyTechnologyStruct power_supply_technology;
 DynparamLib_ns::DynparamLib* dynparam_obj;
 ros::Subscriber dynparam_sub;
 
-boost::thread* loop_thread;
+boost::thread* receive_data_thread;
+boost::thread* check_data_thread;
 std::string can_interface = "can0";
 
 int info_timeout = 30;   // second
@@ -121,7 +122,7 @@ float decodeRemainCapacity(const struct can_frame& frame) {
 
 void dynparamCallback(const dynamic_reconfigure::Config::ConstPtr& msg){}
 
-int loopThread() {
+int receiveDataThread() {
     // setup socketCAN
     int s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
     if(s < 0) { perror("SocketCAN"); return 1; }
@@ -134,7 +135,13 @@ int loopThread() {
     addr.can_family = AF_CAN;
     addr.can_ifindex = ifr.ifr_ifindex;
 
-    if(bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) { perror("Bind"); return 1; }
+    if(bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) { 
+        perror("Bind"); 
+        connection.level = OPERATOR_ERROR;
+        connection.message = "[battery_varta] Can not connect to CAN module";
+        pubDiagnostic();
+        return 1; 
+    }
 
     lastUpdateTimestamp = ros::Time::now();
     connection.level = OPERATOR_OK;
@@ -187,14 +194,23 @@ int loopThread() {
             }
         }
         pubBattery();
-        if(checkPassedTime()){
-          battery_data.level = OPERATOR_ERROR;
-          battery_data.message = "[battery_varta] Timeout (" + to_string(info_timeout) + "s) when try to get battery data";
-        }
+        pubDiagnostic();
         ros::spinOnce();
         loop_rate.sleep();
     }
     close(s);
+}
+void checkDataThread(){
+    ros::Rate loop_rate(2);
+    while (ros::ok()) {
+        if(checkPassedTime()){
+          battery_data.level = OPERATOR_ERROR;
+          battery_data.message = "[battery_varta] Timeout (" + to_string(info_timeout) + "s) when try to get battery data";
+        }
+        pubDiagnostic();
+        ros::spinOnce();
+        loop_rate.sleep();
+    }
 }
 
 bool loadParam(ros::NodeHandle n, std::string node_name){
@@ -235,7 +251,8 @@ int main(int argc, char** argv) {
 
     ros::Duration(1).sleep();
 
-    loop_thread = new boost::thread (&loopThread);      
+    receive_data_thread = new boost::thread (&receiveDataThread);      
+    check_data_thread = new boost::thread (&checkDataThread);     
     updateInterval = ros::Duration(info_timeout);     
 
     ros::spin();
