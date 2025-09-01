@@ -1,12 +1,9 @@
 <launch>
-  <rosparam file="$(find battery_varta)/config/varta.yaml" command="load" ns="/battery"/>
+  <arg name="info_timeout"      default="5"/>
+  <arg name="can_interface"     default="can_peak"/> 
 
-  <node pkg="canopen_chain_node" type="canopen_chain_node" name="varta_can_chain_node" output="screen">
-    <param name="bus/device" value="can_peak"/>
-    <param name="bus/driver_plugin" value="can::SocketCANInterface"/>
-    <param name="bus/master_allocator" value="canopen::SimpleMaster::Allocator"/>
-    <param name="sync/interval_ms" value="100"/>
-    <param name="sync/overflow" value="2"/>
-    <param name="nodes" value="/battery/nodes"/>
+  <node pkg="battery_varta" type="battery_varta_node" name="battery_varta_node" output="screen">
+    <param name="info_timeout"    value="$(arg info_timeout)"/>
+    <param name="can_interface"   value="$(arg can_interface)"/>
   </node>
 </launch>

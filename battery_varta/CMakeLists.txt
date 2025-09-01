@@ -3,13 +3,17 @@ project(battery_varta)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  std_msgs
+  std_msgs  
+  agv_define
+  sensor_msgs
+  agv_dynparam
+  diagnostic_msgs
 )
 
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES battery_varta
-  CATKIN_DEPENDS roscpp std_msgs
+  CATKIN_DEPENDS roscpp std_msgs agv_define sensor_msgs agv_dynparam diagnostic_msgs
 #  DEPENDS system_lib
 )
 
@@ -18,7 +22,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-
+add_executable(battery_varta_node src/battery_varta.cpp)
+target_link_libraries(battery_varta_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -36,9 +41,9 @@ include_directories(
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
-# install(TARGETS ${PROJECT_NAME}_node
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(TARGETS ${PROJECT_NAME}_node
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html

@@ -56,8 +56,14 @@
   <exec_depend>roscpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
 
-  <!-- <build_depend>ros_canopen</build_depend>
-  <exec_depend>ros_canopen</exec_depend> -->
+  <build_depend>agv_define</build_depend>
+  <exec_depend>agv_define</exec_depend>
+  <build_depend>agv_dynparam</build_depend>
+  <exec_depend>agv_dynparam</exec_depend>
+  <build_depend>diagnostic_msgs</build_depend>
+  <exec_depend>diagnostic_msgs</exec_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <exec_depend>sensor_msgs</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

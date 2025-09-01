@@ -1,11 +1,14 @@
-nodes:
-  - id: 1
-    eds_file: config/V02.06.02.00.eds
-    device_family: "Varta"
-    topic: "battery_varta"
-    frame_id: "battery_varta"
-    publish:
-      - '26752:0'
-      - '6656:1'
-      - '6664:2'
-    subscribe: []
+battery_bus:
+  device: can_peak
+  driver_plugin: can::SocketCANInterface
+  master_allocator: canopen::SimpleMaster::Allocator
+battery_sync:
+  interval_ms: 100
+  overflow: 2
+
+battery_nodes:
+  varta_battery:
+    id: 1
+    eds_file: /home/robotics/SASs_AMR_ws/src/battery_varta/battery_varta/config/battery_varta.eds
+    device_family: Varta
+    topic: battery_varta
